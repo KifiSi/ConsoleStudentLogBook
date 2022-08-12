@@ -8,20 +8,23 @@ namespace ChallengeAppConsole
 {
     public class KidInMemory : KidBase
     {
-        private List<double> _grades = new List<double>();
+        private List<string> _grades = new List<string>();
+        private int numberGrade = 1;
 
         private event GradeAddedDelegate GradeAdded;
+        private event GradeDeletedDelegate GradeDeleted;
 
         public KidInMemory(string name) : base(name)
         {
             GradeAdded += OnGradeAdded;
+            GradeDeleted += OnGradeDeleted;
         }
 
-        public override void AddGrades(string grade)
+        public override void AddGrades(string grade, string name)
         {
             if (double.TryParse(grade, out double result) && (result >= 1 && result <= 6))
             {
-                _grades.Add(result);
+                _grades.Add($"{numberGrade++}. {result}");
                 if (result < 3)
                 {
                     GradeAdded += GradeLessThanThree;
@@ -32,43 +35,43 @@ namespace ChallengeAppConsole
                 switch (grade)
                 {
                     case "1+":
-                        _grades.Add(1.5);
+                        _grades.Add($"{numberGrade++}. 1.5");
                         GradeAdded += GradeLessThanThree;
                         break;
 
                     case "2-":
-                        _grades.Add(1.75);
+                        _grades.Add($"{numberGrade++}. 1.75");
                         GradeAdded += GradeLessThanThree;
                         break;
 
                     case "2+":
-                        _grades.Add(2.5);
+                        _grades.Add($"{numberGrade++}. 2.5");
                         GradeAdded += GradeLessThanThree;
                         break;
 
                     case "3-":
-                        _grades.Add(2.75);
+                        _grades.Add($"{numberGrade++}. 2.75");
                         GradeAdded += GradeLessThanThree;
                         break;
 
                     case "3+":
-                        _grades.Add(3.5);
+                        _grades.Add($"{numberGrade++}. 3.5");
                         break;
 
                     case "4-":
-                        _grades.Add(3.75);
+                        _grades.Add($"{numberGrade++}. 3.75");
                         break;
 
                     case "4+":
-                        _grades.Add(4.5);
+                        _grades.Add($"{numberGrade++}. 4.5");
                         break;
 
                     case "5-":
-                        _grades.Add(4.75);
+                        _grades.Add($"{numberGrade++}. 4.75");
                         break;
 
                     case "5+":
-                        _grades.Add(5.5);
+                        _grades.Add($"{numberGrade++}. 5.5");
                         break;
 
                     default:
@@ -87,6 +90,29 @@ namespace ChallengeAppConsole
             }
         }
 
+        public override void RemoveGrade(string indexOfGrade, string name)
+        {
+            int indexToRemove = _grades.FindIndex(a => a.Contains($"{indexOfGrade}."));
+            if (indexToRemove == -1)
+            {
+                throw new ArgumentException("Invalid index of grade to remove");
+            }
+            _grades.RemoveAt(indexToRemove);
+            GradeDeleted(this, new EventArgs());
+        }
+
+        public override void ShowGrades(string name)
+        {
+            if (_grades.Count == 0)
+            {
+                throw new InvalidOperationException($"{name} has no grades");
+            }
+            foreach (string n in _grades)
+            {
+                Console.WriteLine(n);
+            }
+        }
+
         public override void ChangeName(string newName)
         {
             if (string.IsNullOrEmpty(newName) || !newName.All(Char.IsLetter))
@@ -101,9 +127,11 @@ namespace ChallengeAppConsole
         {
             var result = new Statistics();
 
-            foreach (double n in _grades)
+            foreach (string n in _grades)
             {
-                result.Add(n);
+                double gr = Convert.ToDouble(n.Substring(n.IndexOf(".") + 1));
+
+                result.Add(gr);
             }
             return result;
         }

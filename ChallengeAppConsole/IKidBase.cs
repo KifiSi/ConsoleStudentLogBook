@@ -10,9 +10,15 @@ namespace ChallengeAppConsole
     {
         string Name { get; set; }
 
-        void AddGrades(string grade);
+        //void AddGrades(string grade);
+
+        void AddGrades(string grade, string name);
 
         void ChangeName(string newName);
+
+        void RemoveGrade(string indexOfGrade, string name);
+
+        void ShowGrades(string name);
 
         Statistics GetStatistics();
 

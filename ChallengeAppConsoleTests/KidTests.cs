@@ -9,9 +9,9 @@ namespace ChallengeAppConsoleTests
         {
             // arrange - przygotowanie
             var kid = new KidInMemory("Tomek");
-            kid.AddGrades("3+");
-            kid.AddGrades("4.7");
-            kid.AddGrades("5");
+            kid.AddGrades("3+", kid.Name);
+            kid.AddGrades("4.7", kid.Name);
+            kid.AddGrades("5", kid.Name);
 
             // act - test
             var result = kid.GetStatistics();

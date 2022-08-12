@@ -11,5 +11,7 @@ namespace ChallengeAppConsole
         void OnGradeAdded(object sender, EventArgs args);
 
         void GradeLessThanThree(object sender, EventArgs args);
+
+        void OnGradeDeleted(object sender, EventArgs args);
     }
 }

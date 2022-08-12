@@ -1,19 +1,27 @@
 ﻿// See https://aka.ms/new-console-template for more information
+using System.Collections.Generic;
+
 namespace ChallengeAppConsole
 {
     public class KidSaved : KidBase
     {
         private event GradeAddedDelegate GradeAdded;
+        private event GradeDeletedDelegate GradeDeleted;
 
-        private const string fileName = "Grades";
+        private string fileName;
         private const string autoSave = "audit";
+
+        private int numberGrade = 1;
 
         public KidSaved(string name) : base(name)
         {
             GradeAdded += OnGradeAdded;
+            GradeDeleted += OnGradeDeleted;
+            fileName = Name;
+            FileExists(fileName);
         }
 
-        public override void AddGrades(string grade)
+        public override void AddGrades(string grade, string name)
         {
             double tempGrade = 0;
 
@@ -82,14 +90,50 @@ namespace ChallengeAppConsole
             using (var audit = File.AppendText($"{autoSave}.txt"))
             {
                 var date = DateTime.UtcNow;
-                writer.WriteLine(tempGrade);
-                audit.WriteLine($"{date}: grade {tempGrade}");
+                writer.WriteLine($"{numberGrade}. {tempGrade}");
+                audit.WriteLine($"{date}, {name}, Adding grade {numberGrade}. {tempGrade}");
+                numberGrade++;
             }
 
             if (GradeAdded != null)
             {
                 GradeAdded(this, new EventArgs());
                 GradeAdded -= GradeLessThanThree;
+            }
+        }
+        public override void RemoveGrade(string indexOfGrade, string name)
+        {
+            var linesList = File.ReadAllLines($"{fileName}.txt").ToList();
+            int indexToRemove = linesList.FindIndex(a => a.Contains($"{indexOfGrade}."));
+            if (indexToRemove == -1)
+            {
+                throw new ArgumentException("Invalid index of grade to remove");
+            }
+            using (var audit = File.AppendText($"{autoSave}.txt"))
+            {
+                var date = DateTime.UtcNow;
+                audit.WriteLine($"{date}, {name}, Removing grade {linesList[indexToRemove]}");
+            }
+            linesList.RemoveAt(indexToRemove);
+            File.WriteAllLines(($"{fileName}.txt"), linesList.ToArray());
+            GradeDeleted(this, new EventArgs());
+        }
+
+        public override void ShowGrades(string name)
+        {
+            using (var reader = File.OpenText($"{fileName}.txt"))
+            {
+                var line = reader.ReadLine();
+                if (line == null)
+                {
+                    throw new InvalidOperationException($"{name} has no grades");
+                }
+
+                while (line != null)
+                {
+                    Console.WriteLine(line);
+                    line = reader.ReadLine();
+                }
             }
         }
 
@@ -100,6 +144,8 @@ namespace ChallengeAppConsole
                 throw new ArgumentException("Invalid Name");
             }
             Name = newName;
+            fileName = newName;
+            FileExists(fileName);
             Console.WriteLine($"The new name is: {Name}");
         }
 
@@ -112,7 +158,7 @@ namespace ChallengeAppConsole
                 var line = reader.ReadLine();
                 while (line != null)
                 {
-                    var grade = double.Parse(line);
+                    double grade = Convert.ToDouble(line.Substring(line.IndexOf(".") + 1));
                     result.Add(grade);
                     line = reader.ReadLine();
                 }
@@ -120,9 +166,43 @@ namespace ChallengeAppConsole
             return result;
         }
 
+        private void FileExists(string fileName)
+        {
+            var workingDirectory = Environment.CurrentDirectory;
+            var file = $"{workingDirectory}\\{fileName}.txt";
+            if (!File.Exists(file))
+            {
+                using (var _new = File.Create($"{fileName}.txt"))
+                {
+                }
+            }
+            else
+            {
+                using (var reader = File.OpenText($"{fileName}.txt"))
+                {
+                    if (reader.ReadLine() != null)
+                    {
+                        string lastLine = File.ReadLines($"{fileName}.txt").Last();
+                        numberGrade = Convert.ToInt32(lastLine.Substring(0, lastLine.IndexOf("."))) + 1;
+                    }
+                    else
+                    {
+                        numberGrade = 1;
+                    }
+                    
+                    Console.WriteLine(numberGrade);
+                }
+            }
+        }
+
         public override void OnGradeAdded(object sender, EventArgs args)
         {
             Console.WriteLine("New Grade is added in the file");
+        }
+
+        public override void OnGradeDeleted(object sender, EventArgs args)
+        {
+            Console.WriteLine("Grade removed from file");
         }
     }
 }

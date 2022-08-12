@@ -5,9 +5,10 @@ namespace ChallengeAppConsole // Note: actual namespace depends on the project n
 {
     public class Program
     {
+        private static string? name;
+
         static void Main(string[] args)
         {
-            string? name = null;
             var option = "0";
 
             Console.WriteLine("Hello in student logbook");
@@ -18,7 +19,7 @@ namespace ChallengeAppConsole // Note: actual namespace depends on the project n
                 var kid1 = new KidSaved(name);
                 while (option != "9")
                 {
-                    option = MainMenuView();
+                    option = MainMenuView(name);
                     Operation(option, kid1);
                 }
             }
@@ -27,10 +28,10 @@ namespace ChallengeAppConsole // Note: actual namespace depends on the project n
                 var kid2 = new KidInMemory(name);
                 while (option != "9")
                 {
-                    option = MainMenuView();
+                    option = MainMenuView(name);
                     Operation(option, kid2);
                 }
-            }            
+            }
         }
 
         private static string FirstNameWrite()
@@ -39,9 +40,9 @@ namespace ChallengeAppConsole // Note: actual namespace depends on the project n
             {
                 try
                 {
-                    Console.WriteLine("Write you name: ");
+                    Console.WriteLine("Write your name: ");
                     string? name = Console.ReadLine();
-                    if (!name.All(Char.IsLetter) || string.IsNullOrEmpty(name))
+                    if (string.IsNullOrEmpty(name) || !name.All(Char.IsLetter))
                     {
                         throw new ArgumentException("Invalid Name, Can use only letters");
                     }
@@ -79,12 +80,14 @@ namespace ChallengeAppConsole // Note: actual namespace depends on the project n
             }
         }
 
-        private static string MainMenuView()
+        private static string MainMenuView(string name)
         {
-            Console.WriteLine("--------------------");
+            Console.WriteLine($"-------{name}-------");
             Console.WriteLine("1. Add grade");
-            Console.WriteLine("2. Get statistics");
-            Console.WriteLine("3. Change name");
+            Console.WriteLine("2. Delete grade");
+            Console.WriteLine("3. Show grades");
+            Console.WriteLine("4. Get statistics");
+            Console.WriteLine("5. Change name");
             Console.WriteLine("9. Exit");
             Console.WriteLine("What do you want?");
             var option = Console.ReadLine();
@@ -102,7 +105,7 @@ namespace ChallengeAppConsole // Note: actual namespace depends on the project n
                     input = Console.ReadLine();
                     try
                     {
-                        kid.AddGrades(input);
+                        kid.AddGrades(input, kid.Name);
                     }
                     catch (ArgumentException ex)
                     {
@@ -111,6 +114,32 @@ namespace ChallengeAppConsole // Note: actual namespace depends on the project n
                     break;
 
                 case "2":
+                    Console.WriteLine("Write index of grade to remove");
+                    try
+                    {
+                        kid.ShowGrades(kid.Name);
+                        input = Console.ReadLine();
+                        kid.RemoveGrade(input, kid.Name);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                    break;
+
+                case "3":
+                    Console.WriteLine($"{kid.Name} grades:");
+                    try
+                    {
+                        kid.ShowGrades(kid.Name);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                    break;
+
+                case "4":
                     var stats = kid.GetStatistics();
                     Console.WriteLine($"Grade in letter: {stats.Letter}");
                     Console.WriteLine($"The lowest grade: {stats.Low}");
@@ -118,12 +147,13 @@ namespace ChallengeAppConsole // Note: actual namespace depends on the project n
                     Console.WriteLine($"The average: {string.Format("{0:0.00}", stats.Average)}");
                     break;
 
-                case "3":
+                case "5":
                     Console.WriteLine("Write a new name (only letters)");
                     input = Console.ReadLine();
                     try
                     {
                         kid.ChangeName(input);
+                        name = input;
                     }
                     catch (ArgumentException ex)
                     {
@@ -150,7 +180,7 @@ namespace ChallengeAppConsole // Note: actual namespace depends on the project n
                     input = Console.ReadLine();
                     try
                     {
-                        kid.AddGrades(input);
+                        kid.AddGrades(input, kid.Name);
                     }
                     catch (ArgumentException ex)
                     {
@@ -159,6 +189,32 @@ namespace ChallengeAppConsole // Note: actual namespace depends on the project n
                     break;
 
                 case "2":
+                    Console.WriteLine("Write index of grade to remove");
+                    try
+                    {
+                        kid.ShowGrades(kid.Name);
+                        input = Console.ReadLine();
+                        kid.RemoveGrade(input, kid.Name);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                    break;
+
+                case "3":
+                    Console.WriteLine($"{kid.Name} grades:");
+                    try
+                    {
+                        kid.ShowGrades(kid.Name);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                    break;
+
+                case "4":
                     var stats = kid.GetStatistics();
                     Console.WriteLine($"Grade in letter: {stats.Letter}");
                     Console.WriteLine($"The lowest grade: {stats.Low}");
@@ -166,12 +222,13 @@ namespace ChallengeAppConsole // Note: actual namespace depends on the project n
                     Console.WriteLine($"The average: {string.Format("{0:0.00}", stats.Average)}");
                     break;
 
-                case "3":
+                case "5":
                     Console.WriteLine("Write a new name (only letters)");
                     input = Console.ReadLine();
                     try
                     {
                         kid.ChangeName(input);
+                        name = input;
                     }
                     catch (ArgumentException ex)
                     {
