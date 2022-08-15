@@ -9,6 +9,7 @@ namespace ChallengeAppConsole
         private event GradeDeletedDelegate GradeDeleted;
 
         private string fileName;
+        private DateTime date = DateTime.UtcNow;
         private const string autoSave = "audit";
 
         private int numberGrade = 1;
@@ -89,7 +90,6 @@ namespace ChallengeAppConsole
             using (var writer = File.AppendText($"{fileName}.txt"))
             using (var audit = File.AppendText($"{autoSave}.txt"))
             {
-                var date = DateTime.UtcNow;
                 writer.WriteLine($"{numberGrade}. {tempGrade}");
                 audit.WriteLine($"{date}, {name}, Adding grade {numberGrade}. {tempGrade}");
                 numberGrade++;
@@ -111,7 +111,6 @@ namespace ChallengeAppConsole
             }
             using (var audit = File.AppendText($"{autoSave}.txt"))
             {
-                var date = DateTime.UtcNow;
                 audit.WriteLine($"{date}, {name}, Removing grade {linesList[indexToRemove]}");
             }
             linesList.RemoveAt(indexToRemove);
@@ -122,6 +121,7 @@ namespace ChallengeAppConsole
         public override void ShowGrades(string name)
         {
             using (var reader = File.OpenText($"{fileName}.txt"))
+            using (var audit = File.AppendText($"{autoSave}.txt"))
             {
                 var line = reader.ReadLine();
                 if (line == null)
@@ -134,6 +134,7 @@ namespace ChallengeAppConsole
                     Console.WriteLine(line);
                     line = reader.ReadLine();
                 }
+                audit.WriteLine($"{date}, {name}, Showing grades");
             }
         }
 
@@ -154,6 +155,7 @@ namespace ChallengeAppConsole
             var result = new Statistics();
 
             using (var reader = File.OpenText($"{fileName}.txt"))
+            using (var audit = File.AppendText($"{autoSave}.txt"))
             {
                 var line = reader.ReadLine();
                 while (line != null)
@@ -165,6 +167,7 @@ namespace ChallengeAppConsole
                     result.Add(grade);
                     line = reader.ReadLine();
                 }
+                audit.WriteLine($"{date}, {name}, Showing statistics");
             }
             return result;
         }
