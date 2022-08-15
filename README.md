@@ -7,8 +7,8 @@ A console application that simulates a student's logbook.
 
 It has two modes, working in memory and on file.
 At the start, you need to enter a name and select a mode.
-If you have chosen the file mode, the program will create a text file with the given name in which grades will be saved, if one does not exist. The memory mode works only until the application is closed.
-
+If you have chosen the file mode, the program will create a text file with the given name in which grades will be saved, if one does not exist. The memory mode works only until the application is closed.  
+In addition, all operations (file mode) are saved in an additional audit file with time and name.
 
 
 ## What we can do
