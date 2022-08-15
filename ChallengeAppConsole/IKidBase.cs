@@ -20,7 +20,7 @@ namespace ChallengeAppConsole
 
         void ShowGrades(string name);
 
-        Statistics GetStatistics();
+        Statistics GetStatistics(string name);
 
     }
 }

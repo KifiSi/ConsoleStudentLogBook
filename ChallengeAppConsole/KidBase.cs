@@ -25,7 +25,7 @@ namespace ChallengeAppConsole
 
         public abstract void ChangeName(string newName);
 
-        public abstract Statistics GetStatistics();
+        public abstract Statistics GetStatistics(string name);
 
     }
 }

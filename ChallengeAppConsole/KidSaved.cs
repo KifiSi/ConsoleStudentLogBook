@@ -143,13 +143,13 @@ namespace ChallengeAppConsole
             {
                 throw new ArgumentException("Invalid Name");
             }
+            FileExists(newName);
             Name = newName;
             fileName = newName;
-            FileExists(fileName);
             Console.WriteLine($"The new name is: {Name}");
         }
 
-        public override Statistics GetStatistics()
+        public override Statistics GetStatistics(string name)
         {
             var result = new Statistics();
 
@@ -158,7 +158,10 @@ namespace ChallengeAppConsole
                 var line = reader.ReadLine();
                 while (line != null)
                 {
-                    double grade = Convert.ToDouble(line.Substring(line.IndexOf(".") + 1));
+                    if (!Double.TryParse(line.Substring(line.IndexOf(".") + 1), out double grade) || (grade < 1 || grade > 6))
+                    {
+                        throw new ArgumentOutOfRangeException($"File {fileName} has been modified, delete or repair the file");
+                    }
                     result.Add(grade);
                     line = reader.ReadLine();
                 }
@@ -183,13 +186,17 @@ namespace ChallengeAppConsole
                     if (reader.ReadLine() != null)
                     {
                         string lastLine = File.ReadLines($"{fileName}.txt").Last();
+                        if (lastLine.IndexOf(".") == -1)
+                        {
+                            throw new ArgumentOutOfRangeException($"File {fileName} has been modified, delete or repair the file");
+                        }
                         numberGrade = Convert.ToInt32(lastLine.Substring(0, lastLine.IndexOf("."))) + 1;
                     }
                     else
                     {
                         numberGrade = 1;
                     }
-                    
+
                     Console.WriteLine(numberGrade);
                 }
             }

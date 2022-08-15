@@ -9,18 +9,25 @@ namespace ChallengeAppConsole // Note: actual namespace depends on the project n
 
         static void Main(string[] args)
         {
-            var option = "0";
+            string option = "0";
 
             Console.WriteLine("Hello in student logbook");
 
             name = FirstNameWrite();
             if (WorkOnMemoryOrFile())
             {
-                var kid1 = new KidSaved(name);
-                while (option != "9")
+                try
                 {
-                    option = MainMenuView(name);
-                    Operation(option, kid1);
+                    var kid1 = new KidSaved(name);
+                    while (option != "9")
+                    {
+                        option = MainMenuView(name);
+                        Operation(option, kid1);
+                    }
+                }
+                catch (ArgumentOutOfRangeException ex)
+                {
+                    Console.WriteLine(ex.Message);
                 }
             }
             else
@@ -140,11 +147,18 @@ namespace ChallengeAppConsole // Note: actual namespace depends on the project n
                     break;
 
                 case "4":
-                    var stats = kid.GetStatistics();
-                    Console.WriteLine($"Grade in letter: {stats.Letter}");
-                    Console.WriteLine($"The lowest grade: {stats.Low}");
-                    Console.WriteLine($"The highest grade: {stats.High}");
-                    Console.WriteLine($"The average: {string.Format("{0:0.00}", stats.Average)}");
+                    try
+                    {
+                        var stats = kid.GetStatistics(kid.Name);
+                        Console.WriteLine($"Grade in letter: {stats.Letter}");
+                        Console.WriteLine($"The lowest grade: {stats.Low}");
+                        Console.WriteLine($"The highest grade: {stats.High}");
+                        Console.WriteLine($"The average: {string.Format("{0:0.00}", stats.Average)}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
                     break;
 
                 case "5":
@@ -215,11 +229,18 @@ namespace ChallengeAppConsole // Note: actual namespace depends on the project n
                     break;
 
                 case "4":
-                    var stats = kid.GetStatistics();
-                    Console.WriteLine($"Grade in letter: {stats.Letter}");
-                    Console.WriteLine($"The lowest grade: {stats.Low}");
-                    Console.WriteLine($"The highest grade: {stats.High}");
-                    Console.WriteLine($"The average: {string.Format("{0:0.00}", stats.Average)}");
+                    try
+                    {
+                        var stats = kid.GetStatistics(kid.Name);
+                        Console.WriteLine($"Grade in letter: {stats.Letter}");
+                        Console.WriteLine($"The lowest grade: {stats.Low}");
+                        Console.WriteLine($"The highest grade: {stats.High}");
+                        Console.WriteLine($"The average: {string.Format("{0:0.00}", stats.Average)}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
                     break;
 
                 case "5":
@@ -229,6 +250,10 @@ namespace ChallengeAppConsole // Note: actual namespace depends on the project n
                     {
                         kid.ChangeName(input);
                         name = input;
+                    }
+                    catch (ArgumentOutOfRangeException ex)
+                    {
+                        Console.WriteLine(ex.Message);
                     }
                     catch (ArgumentException ex)
                     {

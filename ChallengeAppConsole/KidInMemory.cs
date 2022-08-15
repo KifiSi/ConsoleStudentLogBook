@@ -119,13 +119,24 @@ namespace ChallengeAppConsole
             {
                 throw new ArgumentException("Invalid Name");
             }
+            else if (newName == Name)
+            {
+                throw new ArgumentException("You write the same name");
+            }
             Name = newName;
+            _grades.Clear();
+            numberGrade = 1;
             Console.WriteLine($"The new name is: {Name}");
         }
 
-        public override Statistics GetStatistics()
+        public override Statistics GetStatistics(string name)
         {
             var result = new Statistics();
+
+            if (_grades.Count == 0)
+            {
+                throw new InvalidOperationException($"{name} has no grades");
+            }
 
             foreach (string n in _grades)
             {

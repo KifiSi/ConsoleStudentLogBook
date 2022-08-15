@@ -14,7 +14,7 @@ namespace ChallengeAppConsoleTests
             kid.AddGrades("5", kid.Name);
 
             // act - test
-            var result = kid.GetStatistics();
+            var result = kid.GetStatistics(kid.Name);
 
             // assert - sprawdzenie
             Assert.Equal(3.5, result.Low);
