@@ -1,5 +1,8 @@
-﻿// See https://aka.ms/new-console-template for more information
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace ChallengeAppConsole // Note: actual namespace depends on the project name.
 {
@@ -18,11 +21,11 @@ namespace ChallengeAppConsole // Note: actual namespace depends on the project n
             {
                 try
                 {
-                    var kid1 = new KidSaved(name);
+                    var kid_WorkOnFile = new KidSaved(name);
                     while (option != "9")
                     {
                         option = MainMenuView(name);
-                        Operation(option, kid1);
+                        Operation(option, kid_WorkOnFile);
                     }
                 }
                 catch (ArgumentOutOfRangeException ex)
@@ -32,11 +35,11 @@ namespace ChallengeAppConsole // Note: actual namespace depends on the project n
             }
             else
             {
-                var kid2 = new KidInMemory(name);
+                var kid_WorkInMemory = new KidInMemory(name);
                 while (option != "9")
                 {
                     option = MainMenuView(name);
-                    Operation(option, kid2);
+                    Operation(option, kid_WorkInMemory);
                 }
             }
         }
@@ -102,7 +105,7 @@ namespace ChallengeAppConsole // Note: actual namespace depends on the project n
             return option;
         }
 
-        private static void Operation(string option, KidInMemory kid)
+        private static void Operation(string option, IKidBase kid)
         {
             string? input = null;
             switch (option)
@@ -112,7 +115,7 @@ namespace ChallengeAppConsole // Note: actual namespace depends on the project n
                     input = Console.ReadLine();
                     try
                     {
-                        kid.AddGrades(input, kid.Name);
+                        kid.AddGrade(input);
                     }
                     catch (ArgumentException ex)
                     {
@@ -124,9 +127,9 @@ namespace ChallengeAppConsole // Note: actual namespace depends on the project n
                     Console.WriteLine("Write index of grade to remove");
                     try
                     {
-                        kid.ShowGrades(kid.Name);
+                        kid.ShowGrades();
                         input = Console.ReadLine();
-                        kid.RemoveGrade(input, kid.Name);
+                        kid.RemoveGrade(input);
                     }
                     catch (Exception ex)
                     {
@@ -138,7 +141,7 @@ namespace ChallengeAppConsole // Note: actual namespace depends on the project n
                     Console.WriteLine($"{kid.Name} grades:");
                     try
                     {
-                        kid.ShowGrades(kid.Name);
+                        kid.ShowGrades();
                     }
                     catch (Exception ex)
                     {
@@ -149,7 +152,7 @@ namespace ChallengeAppConsole // Note: actual namespace depends on the project n
                 case "4":
                     try
                     {
-                        var stats = kid.GetStatistics(kid.Name);
+                        var stats = kid.GetStatistics();
                         Console.WriteLine($"Grade in letter: {stats.Letter}");
                         Console.WriteLine($"The lowest grade: {stats.Low}");
                         Console.WriteLine($"The highest grade: {stats.High}");
@@ -168,92 +171,6 @@ namespace ChallengeAppConsole // Note: actual namespace depends on the project n
                     {
                         kid.ChangeName(input);
                         name = input;
-                    }
-                    catch (ArgumentException ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                    }
-                    break;
-
-                case "9":
-                    break;
-
-                default:
-                    Console.WriteLine("Invalid input");
-                    break;
-            }
-        }
-
-        private static void Operation(string option, KidSaved kid)
-        {
-            string? input = null;
-            switch (option)
-            {
-                case "1":
-                    Console.WriteLine("Write a grade (1-6, can use +/-): ");
-                    input = Console.ReadLine();
-                    try
-                    {
-                        kid.AddGrades(input, kid.Name);
-                    }
-                    catch (ArgumentException ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                    }
-                    break;
-
-                case "2":
-                    Console.WriteLine("Write index of grade to remove");
-                    try
-                    {
-                        kid.ShowGrades(kid.Name);
-                        input = Console.ReadLine();
-                        kid.RemoveGrade(input, kid.Name);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                    }
-                    break;
-
-                case "3":
-                    Console.WriteLine($"{kid.Name} grades:");
-                    try
-                    {
-                        kid.ShowGrades(kid.Name);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                    }
-                    break;
-
-                case "4":
-                    try
-                    {
-                        var stats = kid.GetStatistics(kid.Name);
-                        Console.WriteLine($"Grade in letter: {stats.Letter}");
-                        Console.WriteLine($"The lowest grade: {stats.Low}");
-                        Console.WriteLine($"The highest grade: {stats.High}");
-                        Console.WriteLine($"The average: {string.Format("{0:0.00}", stats.Average)}");
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                    }
-                    break;
-
-                case "5":
-                    Console.WriteLine("Write a new name (only letters)");
-                    input = Console.ReadLine();
-                    try
-                    {
-                        kid.ChangeName(input);
-                        name = input;
-                    }
-                    catch (ArgumentOutOfRangeException ex)
-                    {
-                        Console.WriteLine(ex.Message);
                     }
                     catch (ArgumentException ex)
                     {

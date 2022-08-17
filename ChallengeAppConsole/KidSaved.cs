@@ -1,5 +1,8 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace ChallengeAppConsole
 {
@@ -10,7 +13,7 @@ namespace ChallengeAppConsole
 
         private string fileName;
         private DateTime date = DateTime.UtcNow;
-        private const string autoSave = "audit";
+        private const string autoSave = "audit.txt";
 
         private int numberGrade = 1;
 
@@ -22,7 +25,7 @@ namespace ChallengeAppConsole
             FileExists(fileName);
         }
 
-        public override void AddGrades(string grade, string name)
+        public override void AddGrade(string grade)
         {
             double tempGrade = 0;
 
@@ -88,10 +91,10 @@ namespace ChallengeAppConsole
             }
 
             using (var writer = File.AppendText($"{fileName}.txt"))
-            using (var audit = File.AppendText($"{autoSave}.txt"))
+            using (var audit = File.AppendText($"{autoSave}"))
             {
                 writer.WriteLine($"{numberGrade}. {tempGrade}");
-                audit.WriteLine($"{date}, {name}, Adding grade {numberGrade}. {tempGrade}");
+                audit.WriteLine($"{date}, {this.Name}, Adding grade {numberGrade}. {tempGrade}");
                 numberGrade++;
             }
 
@@ -101,7 +104,7 @@ namespace ChallengeAppConsole
                 GradeAdded -= GradeLessThanThree;
             }
         }
-        public override void RemoveGrade(string indexOfGrade, string name)
+        public override void RemoveGrade(string indexOfGrade)
         {
             var linesList = File.ReadAllLines($"{fileName}.txt").ToList();
             int indexToRemove = linesList.FindIndex(a => a.Contains($"{indexOfGrade}."));
@@ -109,24 +112,24 @@ namespace ChallengeAppConsole
             {
                 throw new ArgumentException("Invalid index of grade to remove");
             }
-            using (var audit = File.AppendText($"{autoSave}.txt"))
+            using (var audit = File.AppendText($"{autoSave}"))
             {
-                audit.WriteLine($"{date}, {name}, Removing grade {linesList[indexToRemove]}");
+                audit.WriteLine($"{date}, {this.Name}, Removing grade {linesList[indexToRemove]}");
             }
             linesList.RemoveAt(indexToRemove);
             File.WriteAllLines(($"{fileName}.txt"), linesList.ToArray());
             GradeDeleted(this, new EventArgs());
         }
 
-        public override void ShowGrades(string name)
+        public override void ShowGrades()
         {
             using (var reader = File.OpenText($"{fileName}.txt"))
-            using (var audit = File.AppendText($"{autoSave}.txt"))
+            using (var audit = File.AppendText($"{autoSave}"))
             {
                 var line = reader.ReadLine();
                 if (line == null)
                 {
-                    throw new InvalidOperationException($"{name} has no grades");
+                    throw new InvalidOperationException($"{this.Name} has no grades");
                 }
 
                 while (line != null)
@@ -134,7 +137,7 @@ namespace ChallengeAppConsole
                     Console.WriteLine(line);
                     line = reader.ReadLine();
                 }
-                audit.WriteLine($"{date}, {name}, Showing grades");
+                audit.WriteLine($"{date}, {this.Name}, Showing grades");
             }
         }
 
@@ -144,18 +147,22 @@ namespace ChallengeAppConsole
             {
                 throw new ArgumentException("Invalid Name");
             }
+            else if (newName == this.Name)
+            {
+                throw new ArgumentException("You write the same name");
+            }
             FileExists(newName);
-            Name = newName;
+            this.Name = newName;
             fileName = newName;
-            Console.WriteLine($"The new name is: {Name}");
+            Console.WriteLine($"The new name is: {this.Name}");
         }
 
-        public override Statistics GetStatistics(string name)
+        public override Statistics GetStatistics()
         {
             var result = new Statistics();
 
             using (var reader = File.OpenText($"{fileName}.txt"))
-            using (var audit = File.AppendText($"{autoSave}.txt"))
+            using (var audit = File.AppendText($"{autoSave}"))
             {
                 var line = reader.ReadLine();
                 while (line != null)
@@ -167,7 +174,7 @@ namespace ChallengeAppConsole
                     result.Add(grade);
                     line = reader.ReadLine();
                 }
-                audit.WriteLine($"{date}, {name}, Showing statistics");
+                audit.WriteLine($"{date}, {this.Name}, Showing statistics");
             }
             return result;
         }

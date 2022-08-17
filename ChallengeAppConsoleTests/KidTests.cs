@@ -5,16 +5,16 @@ namespace ChallengeAppConsoleTests
     public class KidTests
     {
         [Fact]
-        public void Test1()
+        public void CanAddGradesAndCheckStatistics()
         {
             // arrange - przygotowanie
             var kid = new KidInMemory("Tomek");
-            kid.AddGrades("3+", kid.Name);
-            kid.AddGrades("4.7", kid.Name);
-            kid.AddGrades("5", kid.Name);
+            kid.AddGrade("3+");
+            kid.AddGrade("4.7");
+            kid.AddGrade("5");
 
             // act - test
-            var result = kid.GetStatistics(kid.Name);
+            var result = kid.GetStatistics();
 
             // assert - sprawdzenie
             Assert.Equal(3.5, result.Low);

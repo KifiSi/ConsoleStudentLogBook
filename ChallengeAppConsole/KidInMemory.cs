@@ -8,7 +8,7 @@ namespace ChallengeAppConsole
 {
     public class KidInMemory : KidBase
     {
-        private List<string> _grades = new List<string>();
+        private List<string> grades = new List<string>();
         private int numberGrade = 1;
 
         private event GradeAddedDelegate GradeAdded;
@@ -20,11 +20,11 @@ namespace ChallengeAppConsole
             GradeDeleted += OnGradeDeleted;
         }
 
-        public override void AddGrades(string grade, string name)
+        public override void AddGrade(string grade)
         {
             if (double.TryParse(grade, out double result) && (result >= 1 && result <= 6))
             {
-                _grades.Add($"{numberGrade++}. {result}");
+                grades.Add($"{numberGrade++}. {result}");
                 if (result < 3)
                 {
                     GradeAdded += GradeLessThanThree;
@@ -35,43 +35,43 @@ namespace ChallengeAppConsole
                 switch (grade)
                 {
                     case "1+":
-                        _grades.Add($"{numberGrade++}. 1.5");
+                        grades.Add($"{numberGrade++}. 1.5");
                         GradeAdded += GradeLessThanThree;
                         break;
 
                     case "2-":
-                        _grades.Add($"{numberGrade++}. 1.75");
+                        grades.Add($"{numberGrade++}. 1.75");
                         GradeAdded += GradeLessThanThree;
                         break;
 
                     case "2+":
-                        _grades.Add($"{numberGrade++}. 2.5");
+                        grades.Add($"{numberGrade++}. 2.5");
                         GradeAdded += GradeLessThanThree;
                         break;
 
                     case "3-":
-                        _grades.Add($"{numberGrade++}. 2.75");
+                        grades.Add($"{numberGrade++}. 2.75");
                         GradeAdded += GradeLessThanThree;
                         break;
 
                     case "3+":
-                        _grades.Add($"{numberGrade++}. 3.5");
+                        grades.Add($"{numberGrade++}. 3.5");
                         break;
 
                     case "4-":
-                        _grades.Add($"{numberGrade++}. 3.75");
+                        grades.Add($"{numberGrade++}. 3.75");
                         break;
 
                     case "4+":
-                        _grades.Add($"{numberGrade++}. 4.5");
+                        grades.Add($"{numberGrade++}. 4.5");
                         break;
 
                     case "5-":
-                        _grades.Add($"{numberGrade++}. 4.75");
+                        grades.Add($"{numberGrade++}. 4.75");
                         break;
 
                     case "5+":
-                        _grades.Add($"{numberGrade++}. 5.5");
+                        grades.Add($"{numberGrade++}. 5.5");
                         break;
 
                     default:
@@ -90,24 +90,24 @@ namespace ChallengeAppConsole
             }
         }
 
-        public override void RemoveGrade(string indexOfGrade, string name)
+        public override void RemoveGrade(string indexOfGrade)
         {
-            int indexToRemove = _grades.FindIndex(a => a.Contains($"{indexOfGrade}."));
+            int indexToRemove = grades.FindIndex(a => a.Contains($"{indexOfGrade}."));
             if (indexToRemove == -1)
             {
                 throw new ArgumentException("Invalid index of grade to remove");
             }
-            _grades.RemoveAt(indexToRemove);
+            grades.RemoveAt(indexToRemove);
             GradeDeleted(this, new EventArgs());
         }
 
-        public override void ShowGrades(string name)
+        public override void ShowGrades()
         {
-            if (_grades.Count == 0)
+            if (grades.Count == 0)
             {
-                throw new InvalidOperationException($"{name} has no grades");
+                throw new InvalidOperationException($"{this.Name} has no grades");
             }
-            foreach (string n in _grades)
+            foreach (string n in grades)
             {
                 Console.WriteLine(n);
             }
@@ -119,26 +119,26 @@ namespace ChallengeAppConsole
             {
                 throw new ArgumentException("Invalid Name");
             }
-            else if (newName == Name)
+            else if (newName == this.Name)
             {
                 throw new ArgumentException("You write the same name");
             }
-            Name = newName;
-            _grades.Clear();
+            this.Name = newName;
+            grades.Clear();
             numberGrade = 1;
-            Console.WriteLine($"The new name is: {Name}");
+            Console.WriteLine($"The new name is: {this.Name}");
         }
 
-        public override Statistics GetStatistics(string name)
+        public override Statistics GetStatistics()
         {
             var result = new Statistics();
 
-            if (_grades.Count == 0)
+            if (grades.Count == 0)
             {
-                throw new InvalidOperationException($"{name} has no grades");
+                throw new InvalidOperationException($"{this.Name} has no grades");
             }
 
-            foreach (string n in _grades)
+            foreach (string n in grades)
             {
                 double gr = Convert.ToDouble(n.Substring(n.IndexOf(".") + 1));
 
