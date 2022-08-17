@@ -32,24 +32,18 @@ namespace ChallengeAppConsole
             }
         }
 
-        public char Letter
+        public char Letter 
         {
             get
             {
-                switch (Average)
+                var result = Average switch
                 {
-                    case double d when d >= 4.5:
-                        return 'A';
-
-                    case double d when d >= 3.9:
-                        return 'B';
-
-                    case double d when d >= 3:
-                        return 'C';
-
-                    default:
-                        return 'D';
-                }
+                    >= 4.5 => 'A',
+                    >= 3.9 => 'B',
+                    >= 3 => 'C',
+                    _ => 'D'
+                };
+                return result;
             }
         }
 
