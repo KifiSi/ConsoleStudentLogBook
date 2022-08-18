@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,7 +23,10 @@ namespace ChallengeAppConsole
 
         public override void AddGrade(string grade)
         {
-            if (double.TryParse(grade, out double result) && (result >= 1 && result <= 6))
+            if ((double.TryParse(grade, NumberStyles.AllowDecimalPoint, CultureInfo.CurrentCulture, out double result) ||
+                double.TryParse(grade, NumberStyles.AllowDecimalPoint, CultureInfo.GetCultureInfo("pl-PL"), out result) ||
+                double.TryParse(grade, NumberStyles.AllowDecimalPoint, CultureInfo.GetCultureInfo("en-US"), out result)) &&
+                (result >= 1 && result <= 6))
             {
                 grades.Add($"{numberGrade++}. {result}");
                 if (result < 3)

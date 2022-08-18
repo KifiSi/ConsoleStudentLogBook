@@ -21,11 +21,11 @@ namespace ChallengeAppConsole // Note: actual namespace depends on the project n
             {
                 try
                 {
-                    var kid_WorkOnFile = new KidSaved(name);
+                    var kidWorkOnFile = new KidSaved(name);
                     while (option != "9")
                     {
                         option = MainMenuView(name);
-                        Operation(option, kid_WorkOnFile);
+                        Operation(option, kidWorkOnFile);
                     }
                 }
                 catch (ArgumentOutOfRangeException ex)
@@ -35,11 +35,11 @@ namespace ChallengeAppConsole // Note: actual namespace depends on the project n
             }
             else
             {
-                var kid_WorkInMemory = new KidInMemory(name);
+                var kidWorkInMemory = new KidInMemory(name);
                 while (option != "9")
                 {
                     option = MainMenuView(name);
-                    Operation(option, kid_WorkInMemory);
+                    Operation(option, kidWorkInMemory);
                 }
             }
         }
