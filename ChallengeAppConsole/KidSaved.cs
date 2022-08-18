@@ -171,11 +171,15 @@ namespace ChallengeAppConsole
                 var line = reader.ReadLine();
                 while (line != null)
                 {
-                    if (!Double.TryParse(line.Substring(line.IndexOf(".") + 1), out double grade) || (grade < 1 || grade > 6))
+                    string gradeWithoutIndex = (line.Substring(line.IndexOf(".") + 2));
+                    if (!(double.TryParse(gradeWithoutIndex, NumberStyles.AllowDecimalPoint, CultureInfo.CurrentCulture, out double grToAdd) ||
+                        double.TryParse(gradeWithoutIndex, NumberStyles.AllowDecimalPoint, CultureInfo.GetCultureInfo("pl-PL"), out grToAdd) ||
+                        double.TryParse(gradeWithoutIndex, NumberStyles.AllowDecimalPoint, CultureInfo.GetCultureInfo("en-US"), out grToAdd)) ||
+                        (grToAdd < 1 || grToAdd > 6))
                     {
                         throw new ArgumentOutOfRangeException($"File {fileName} has been modified, delete or repair the file");
                     }
-                    result.Add(grade);
+                    result.Add(grToAdd);
                     line = reader.ReadLine();
                 }
                 audit.WriteLine($"{date}, {this.Name}, Showing statistics");

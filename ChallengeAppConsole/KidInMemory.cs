@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -144,9 +145,14 @@ namespace ChallengeAppConsole
 
             foreach (string n in grades)
             {
-                double gr = Convert.ToDouble(n.Substring(n.IndexOf(".") + 1));
+                string gradeWithoutIndex = (n.Substring(n.IndexOf(".") + 2));
 
-                result.Add(gr);
+                if(double.TryParse(gradeWithoutIndex, NumberStyles.AllowDecimalPoint, CultureInfo.CurrentCulture, out double grToAdd) ||
+                double.TryParse(gradeWithoutIndex, NumberStyles.AllowDecimalPoint, CultureInfo.GetCultureInfo("pl-PL"), out grToAdd) ||
+                double.TryParse(gradeWithoutIndex, NumberStyles.AllowDecimalPoint, CultureInfo.GetCultureInfo("en-US"), out grToAdd))
+                {
+                    result.Add(grToAdd);
+                }
             }
             return result;
         }
