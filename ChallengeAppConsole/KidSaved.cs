@@ -169,6 +169,12 @@ namespace ChallengeAppConsole
             using (var audit = File.AppendText($"{autoSave}"))
             {
                 var line = reader.ReadLine();
+
+                if (line == null)
+                {
+                    throw new InvalidOperationException($"{this.Name} has no grades");
+                }
+
                 while (line != null)
                 {
                     string gradeWithoutIndex = (line.Substring(line.IndexOf(".") + 2));
