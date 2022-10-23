@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace ChallengeAppConsole // Note: actual namespace depends on the project name.
 {
-    public class Program
+    public static class Program
     {
-        private static string? name;
+        private static string? Name;
 
         static void Main(string[] args)
         {
@@ -16,15 +16,15 @@ namespace ChallengeAppConsole // Note: actual namespace depends on the project n
 
             Console.WriteLine("Hello in student logbook");
 
-            name = FirstNameWrite();
+            Name = FirstNameWrite();
             if (WorkOnMemoryOrFile())
             {
                 try
                 {
-                    var kidWorkOnFile = new KidSaved(name);
+                    var kidWorkOnFile = new KidSaved(Name);
                     while (option != "9")
                     {
-                        option = MainMenuView(name);
+                        option = MainMenuView(Name);
                         Operation(option, kidWorkOnFile);
                     }
                 }
@@ -35,10 +35,10 @@ namespace ChallengeAppConsole // Note: actual namespace depends on the project n
             }
             else
             {
-                var kidWorkInMemory = new KidInMemory(name);
+                var kidWorkInMemory = new KidInMemory(Name);
                 while (option != "9")
                 {
-                    option = MainMenuView(name);
+                    option = MainMenuView(Name);
                     Operation(option, kidWorkInMemory);
                 }
             }
@@ -170,7 +170,7 @@ namespace ChallengeAppConsole // Note: actual namespace depends on the project n
                     try
                     {
                         kid.ChangeName(input);
-                        name = input;
+                        Name = input;
                     }
                     catch (ArgumentException ex)
                     {

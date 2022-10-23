@@ -8,13 +8,13 @@ namespace ChallengeAppConsole
 {
     public class Statistics
     {
-        public double High;
+        public double High { get; set; }
 
-        public double Low;
+        public double Low { get; set; }
 
-        public double Sum;
+        public double Sum { get; set; }
 
-        public int Count;
+        public int Count { get; set; }
 
         public Statistics()
         {
@@ -32,7 +32,7 @@ namespace ChallengeAppConsole
             }
         }
 
-        public char Letter 
+        public char Letter
         {
             get
             {

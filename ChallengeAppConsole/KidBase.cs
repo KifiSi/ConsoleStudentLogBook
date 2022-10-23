@@ -8,7 +8,7 @@ namespace ChallengeAppConsole
 {
     public abstract class KidBase : EventMessage, IKidBase
     {
-        public KidBase(string name)
+        protected KidBase(string name)
         {
             Name = name;
         }

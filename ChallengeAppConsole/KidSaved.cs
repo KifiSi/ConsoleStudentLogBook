@@ -13,7 +13,7 @@ namespace ChallengeAppConsole
         private event GradeDeletedDelegate GradeDeleted;
 
         private string fileName;
-        private DateTime date = DateTime.UtcNow;
+        readonly DateTime date = DateTime.UtcNow;
         private const string autoSave = "audit.txt";
 
         private int numberGrade = 1;

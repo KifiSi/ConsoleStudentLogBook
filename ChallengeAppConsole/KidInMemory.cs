@@ -10,7 +10,7 @@ namespace ChallengeAppConsole
 {
     public class KidInMemory : KidBase
     {
-        private List<string> grades = new List<string>();
+        readonly List<string> grades = new List<string>();
         private int numberGrade = 1;
 
         private event GradeAddedDelegate GradeAdded;
